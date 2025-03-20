@@ -21,7 +21,7 @@ Detailed instructions for using `Spectre.Console` are located on their project w
   on any text prompt in the base library.
 * Written with unit testing in mind.
 
-![Example](docs/input/assets/images/example.png)
+![Example](docs/input/assets/images/example.gif)
 
 ## Important Notices
 
