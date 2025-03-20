@@ -28,20 +28,6 @@
     </None>
   </ItemGroup>
 
-  <PropertyGroup Label="Package Information">
-    <Description>An extension to Spectre.Console that provides a TextPromptWithHistory that supports scrollable input history.</Description>
-    <Copyright>Sean A. McElroy</Copyright>
-    <Authors>Sean A. McElroy</Authors>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/seanmcelroy/TextPromptWithHistory</RepositoryUrl>
-    <PackageIcon>logo.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>https://github.com/seanmcelroy/TextPromptWithHistory</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageReleaseNotes>https://github.com/seanmcelroy/TextPromptWithHistory/releases</PackageReleaseNotes>
-  </PropertyGroup>
-
   <PropertyGroup Label="Source Link">
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>

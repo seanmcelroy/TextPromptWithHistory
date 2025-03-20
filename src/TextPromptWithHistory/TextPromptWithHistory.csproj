@@ -13,6 +13,22 @@
     <InternalsVisibleTo Include="$(AssemblyName).Tests"/>
   </ItemGroup>
 
+  <PropertyGroup Label="Package Information">
+    <PackageId>Spectre.Console.Community.TextPromptWithHistory</PackageId>
+    <Version>1.0.1</Version>
+    <Description>An extension to Spectre.Console that provides a TextPromptWithHistory that supports scrollable input history.</Description>
+    <Copyright>Sean A. McElroy</Copyright>
+    <Authors>Sean A. McElroy</Authors>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/seanmcelroy/TextPromptWithHistory</RepositoryUrl>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/seanmcelroy/TextPromptWithHistory</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>https://github.com/seanmcelroy/TextPromptWithHistory/releases</PackageReleaseNotes>
+  </PropertyGroup>
+
   <ItemGroup Label="Dependencies">
     <PackageReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="System.Memory"/>
     <PackageReference Include="Wcwidth.Sources">
