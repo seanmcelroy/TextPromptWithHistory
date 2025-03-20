@@ -94,13 +94,6 @@ public sealed class TextPromptWithHistory<T> : IPrompt<T>, IHasCulture
     /// </summary>
     internal DefaultPromptValue<T>? DefaultValue { get; set; }
 
-    /// <inheritdoc/>
-    CultureInfo? IHasCulture.Culture
-    {
-        get => throw new NotImplementedException();
-        set => throw new NotImplementedException();
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="TextPromptWithHistory{T}"/> class.
     /// </summary>
