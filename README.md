@@ -30,7 +30,7 @@ Detailed instructions for using `Spectre.Console` are located on their project w
 The fastest way of getting started using `TextPromptWithHistory` is to install the NuGet package.
 
 ```csharp
-dotnet add package Spectre.Console.Community.TextPromptWithHistory
+dotnet add package Spectre.Community.TextPromptWithHistory
 ```
 
 ## Documentation

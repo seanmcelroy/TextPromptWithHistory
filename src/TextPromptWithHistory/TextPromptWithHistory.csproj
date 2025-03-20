@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <PropertyGroup Label="Package Information">
-    <PackageId>Spectre.Console.Community.TextPromptWithHistory</PackageId>
+    <PackageId>Spectre.Community.TextPromptWithHistory</PackageId>
     <Version>1.0.1</Version>
     <Description>An extension to Spectre.Console that provides a TextPromptWithHistory that supports scrollable input history.</Description>
     <Copyright>Sean A. McElroy</Copyright>
