@@ -1,0 +1,9 @@
+global using System;
+global using System.Runtime.CompilerServices;
+global using System.Threading.Tasks;
+global using Shouldly;
+global using Spectre.Console.Testing;
+global using TextPromptWithHistory;
+global using VerifyTests;
+global using VerifyXunit;
+global using Xunit;
