@@ -17,6 +17,7 @@ public static class AnsiConsoleExtensions
 
         var autocomplete = new List<string>(items ?? Enumerable.Empty<string>());
         var historyIndex = -1;
+        string? prehistorySaved = null;
 
         while (true)
         {
@@ -73,7 +74,7 @@ public static class AnsiConsoleExtensions
             }
 
             var historyCount = history?.Count() ?? 0;
-            if (key.Key == ConsoleKey.UpArrow && historyCount > 0)
+            if (key.Key == ConsoleKey.UpArrow && historyCount > 0 && historyIndex < historyCount)
             {
                 console.Cursor.MoveLeft(text.Length);
                 console.Write(" ".Repeat(text.Length));
@@ -83,6 +84,10 @@ public static class AnsiConsoleExtensions
                 if (historyIndex > historyCount)
                 {
                     historyIndex = historyCount;
+                }
+                else if (historyIndex == 0)
+                {
+                    prehistorySaved = text;
                 }
 
                 var prev = history!.Reverse().Skip(historyIndex).Take(1).FirstOrDefault();
@@ -110,13 +115,14 @@ public static class AnsiConsoleExtensions
 
                 if (historyIndex == -1)
                 {
-                    text = string.Empty;
+                    text = prehistorySaved ?? string.Empty;
                 }
                 else
                 {
                     text = history!.Reverse().Skip(historyIndex).Take(1).FirstOrDefault() ?? string.Empty;
-                    console.Write(text);
                 }
+
+                console.Write(text);
 
                 continue;
             }
