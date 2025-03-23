@@ -1,12 +1,12 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using Spectre.Console.Cli;
-using Spectre.Console;
 using CliTest.TinyStupidGame;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
-namespace CliTest.cmds;
+namespace CliTest.Cmds;
 
-[Description("Choose one specific from menu....")]
+[Description("Choose one specific from list...")]
 internal sealed class Select : Command<Select.Settings>
 {
     private readonly TheGame _game;
@@ -16,7 +16,7 @@ internal sealed class Select : Command<Select.Settings>
         _game = inj;
     }
 
-    public sealed class Settings : CommandSettings
+    public sealed class Settings : BaseSettings
     {
         [CommandArgument(0, "[itemType]")]
         [Description("What items you want to select from?")]
@@ -25,12 +25,6 @@ internal sealed class Select : Command<Select.Settings>
         [CommandArgument(1, "[itemName]")]
         [Description("Name the one you want to select.")]
         public string? ItemName { get; set; }
-
-
-        [CommandOption("-v|--verbose")]
-        [DefaultValue(false)]
-        [Description("Make it talk more.")]
-        public bool TalkALot { get; init; }
     }
 
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)

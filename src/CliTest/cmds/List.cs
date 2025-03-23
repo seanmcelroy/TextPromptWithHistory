@@ -1,10 +1,10 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using Spectre.Console.Cli;
-using Spectre.Console;
 using CliTest.TinyStupidGame;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
-namespace CliTest.cmds;
+namespace CliTest.Cmds;
 
 [Description("See whats on the menu ...")]
 internal sealed class List : Command<List.Settings>
@@ -16,13 +16,8 @@ internal sealed class List : Command<List.Settings>
         _game = inj;
     }
 
-    public sealed class Settings : CommandSettings
+    public sealed class Settings : BaseSettings
     {
-        [CommandOption("-v|--verbose")]
-        [DefaultValue(false)]
-        [Description("Make it talk more more")]
-        public bool TalkALot { get; init; }
-
         [CommandArgument(0, "[searchItem]")]
         [DefaultValue(null)]
         [Description("What items you want to explore?")]
@@ -42,12 +37,12 @@ internal sealed class List : Command<List.Settings>
         else if (string.IsNullOrEmpty(settings.ItemType))
         {
             AnsiConsole.MarkupLineInterpolated($"What kind of things you are interessted in?");
-        } else
+        }
+        else
         {
             AnsiConsole.MarkupLineInterpolated($"I don't know much about {settings.ItemType}.");
         }
+
         return 0;
     }
 }
-
-

@@ -1,10 +1,10 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using Spectre.Console.Cli;
-using Spectre.Console;
 using CliTest.TinyStupidGame;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
-namespace CliTest.cmds;
+namespace CliTest.Cmds;
 
 [Description("Its time to go ...")]
 internal sealed class Beam : Command<Beam.Settings>
@@ -16,12 +16,8 @@ internal sealed class Beam : Command<Beam.Settings>
         _game = inj;
     }
 
-    public sealed class Settings : CommandSettings
+    public sealed class Settings : BaseSettings
     {
-        [CommandOption("-v|--verbose")]
-        [DefaultValue(false)]
-        [Description("Make it talk more.")]
-        public bool TalkALot { get; init; }
     }
 
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)

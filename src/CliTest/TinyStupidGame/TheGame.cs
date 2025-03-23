@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Spectre.Console;
 
 namespace CliTest.TinyStupidGame;
@@ -11,9 +6,7 @@ internal class TheGame
     private readonly List<string> _planets = new() { "Earth", "Jupiter", "Mars", "Venus" };
     private readonly List<string> _planetDict = new() { "mostly harmless.", "a gassy giant with lot of moons.", " the red one.", "Aphrodite, Inanna, thank god its Frigg, ... " };
     private readonly List<string> _ships = new() { "Orion", "Voyager", "Crudy", "Megablast", "MyCruiser" };
-
-    private int _yourPositionIdx = 0;
-    private Dictionary<int, int> _shipPosition = new()
+    private readonly Dictionary<int, int> _shipPositions = new()
     {
         { 0, 0 },
         { 1, 0 },
@@ -22,18 +15,18 @@ internal class TheGame
         { 4, 2 },
     };
 
+    private int _yourPositionIdx = 0;
     private string? _selectedTarget = null;
     private string? _selectedShip = null;
 
-
     public TheGame()
     {
-        AnsiConsole.WriteLine($"TheGame constructed.");
+        // AnsiConsole.WriteLine($"TheGame constructed.");
     }
 
     internal string ListPlanets(bool talkALot)
     {
-        string retVal = "";
+        string retVal = string.Empty;
         for (int i = 0; i < _planets.Count; i++)
         {
             retVal += FormatSelected(_planets[i], _selectedTarget);
@@ -54,15 +47,14 @@ internal class TheGame
         if (talkALot)
         {
             retVal = "This ships are known of (in the solar system): ";
-            foreach (var ship in _ships)
-            {
-                retVal += Environment.NewLine + FormatSelected(ship, _selectedShip);
+            for (int i = 0; i < _ships.Count; i++) {
+                retVal += Environment.NewLine + FormatSelected(_ships[i], _selectedShip) + ", last seen at " + _planets[_shipPositions[i]] + ".";
             }
         }
         else
         {
             retVal = "This are seen ships: ";
-            var localshipsIdx = _shipPosition.Where(x => x.Value == _yourPositionIdx).Select(x => x.Key);
+            var localshipsIdx = _shipPositions.Where(x => x.Value == _yourPositionIdx).Select(x => x.Key);
             foreach (var idx in localshipsIdx)
             {
                 retVal += Environment.NewLine + FormatSelected(_ships[idx], _selectedShip);
@@ -78,17 +70,19 @@ internal class TheGame
         if (name.Equals(selected))
         {
             retVal += "*";
-        } else
+        }
+        else
         {
             retVal += " ";
         }
+
         retVal += "] " + name;
         return retVal;
     }
 
     internal string SelectShip(string itemName, bool talkALot)
     {
-        string retVal = "";
+        string retVal = string.Empty;
         if (_ships.Contains(itemName))
         {
             _selectedShip = itemName;
@@ -105,7 +99,7 @@ internal class TheGame
 
     internal string SelectTarget(string itemName, bool talkALot)
     {
-        string retVal = "";
+        string retVal = string.Empty;
         if (_planets.Contains(itemName))
         {
             _selectedTarget = itemName;
@@ -122,11 +116,11 @@ internal class TheGame
 
     internal string WhereAmI(bool talkALot)
     {
-        string retVal = "You are on " + _planets[_yourPositionIdx];
+        string retVal = "You are on " + _planets[_yourPositionIdx] + ".";
         if (talkALot)
         {
-            var localshipsIdx = _shipPosition.Where(x => x.Value == _yourPositionIdx).Select(x => x.Key);
-            retVal += Environment.NewLine + "You can see ";
+            var localshipsIdx = _shipPositions.Where(x => x.Value == _yourPositionIdx).Select(x => x.Key);
+            retVal += Environment.NewLine + "You can see the ships ";
             foreach (var idx in localshipsIdx)
             {
                 retVal += _ships[idx] + " ";
@@ -172,7 +166,7 @@ internal class TheGame
             {
                 _yourPositionIdx = _planets.FindIndex(x => x.Equals(_selectedTarget));
                 int shipIdx = _ships.FindIndex(x => x.Equals(_selectedShip));
-                _shipPosition[shipIdx] = _yourPositionIdx;
+                _shipPositions[shipIdx] = _yourPositionIdx;
 
                 AnsiConsole.Status()
                 .Start(talkALot ? $"You enter orbit to board {_selectedShip}..." : $".", ctx =>
@@ -187,12 +181,12 @@ internal class TheGame
                     ctx.SpinnerStyle(Style.Parse("green"));
 
                     // Simulate some work
-                    AnsiConsole.MarkupLine(talkALot ? $"Heading of towards {_selectedTarget}..." : $".");
+                    AnsiConsole.MarkupLine(talkALot ? $"Heading towards {_selectedTarget}..." : $".");
                     Thread.Sleep(2000);
                 });
 
                 _selectedTarget = null;
-                retVal = talkALot ? "After an exiting journey finally you reached your desired target." : "arrived";
+                retVal = talkALot ? "After an exciting journey finally you reached your desired target." : "arrived.";
             }
         }
 

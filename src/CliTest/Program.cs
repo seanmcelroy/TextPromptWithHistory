@@ -1,4 +1,4 @@
-using CliTest.cmds;
+using CliTest.Cmds;
 using CliTest.TinyStupidGame;
 using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
@@ -11,7 +11,7 @@ internal class Program
 {
     private readonly CommandApp _app;
 
-    static void Main(string[] args)
+    public static void Main(string[] args)
     {
         var registrations = new ServiceCollection();
         registrations.AddSingleton<TheGame>(new TheGame());
@@ -32,7 +32,7 @@ internal class Program
         });
 
         Program p = new Program(app);
-        p.RunShell();
+        p.RunShell("tsg>");
     }
 
     public Program(CommandApp app)
@@ -40,31 +40,32 @@ internal class Program
         _app = app;
     }
 
-    private void RunShell()
+    // This could also go into a CommandApp-Extension....
+    private void RunShell(string prompt = ">", string exitCmd = "exit")
     {
         List<string> lineBuffer = new();
-        string prompt = "tsg>";
         while (true)
         {
-            var line = AnsiConsole.Prompt(new TextPromptWithHistory<String>(prompt).AllowEmpty().AddHistory(lineBuffer));
+            var line = AnsiConsole.Prompt(new TextPromptWithHistory<string>(prompt).AllowEmpty().AddHistory(lineBuffer));
             if (!string.IsNullOrEmpty(line))
             {
-                if (line.Trim().ToLower().StartsWith("exit"))
+                if (line.Trim().ToLower().StartsWith(exitCmd))
                 {
                     break;
                 }
 
                 lineBuffer.Add(line);
-                if ((new List<string>() { "-?", "?", "help", "-help", "--help" }).Contains(line.Trim().ToLower()))
+                if (new List<string>() { "-?", "?", "help", "-help", "--help" }.Contains(line.Trim().ToLower()))
                 {
                     line = "-h";
                 }
+
                 try
                 {
                     string[] largs = line.Split(new char[] { }, StringSplitOptions.RemoveEmptyEntries);
                     if (largs.Length == 2)
                     {
-                        if (largs[0].ToLower() == "help")
+                        if (largs[0].Equals("help", StringComparison.InvariantCultureIgnoreCase))
                         {
                             largs[0] = largs[1];
                             largs[1] = "-h";
@@ -80,8 +81,4 @@ internal class Program
             }
         }
     }
-
-
-
-
 }
