@@ -1,3 +1,5 @@
+using Spectre.Console;
+
 namespace TextPromptWithHistory;
 
 /// <summary>
@@ -14,6 +16,7 @@ public static class AnsiConsoleExtensions
 
         style ??= Style.Plain;
         var text = string.Empty;
+        var lineIndex = 0;
 
         var autocomplete = new List<string>(items ?? Enumerable.Empty<string>());
         var historyIndex = -1;
@@ -50,24 +53,81 @@ public static class AnsiConsoleExtensions
                 }
             }
 
+            if (key.Key == ConsoleKey.LeftArrow)
+            {
+                if (lineIndex > 0)
+                {
+                    console.Cursor.MoveLeft();
+                    lineIndex--;
+                }
+
+                continue;
+            }
+
+            if (key.Key == ConsoleKey.RightArrow)
+            {
+                if (text.Length > lineIndex)
+                {
+                    console.Cursor.MoveRight();
+                    lineIndex++;
+                }
+
+                continue;
+            }
+
+            if (key.Key == ConsoleKey.Delete)
+            {
+                if (text.Length > lineIndex)
+                {
+                    char charToDelete = text[lineIndex];
+                    string tail = text.Substring(lineIndex + 1);
+
+                    text = text.Substring(0, lineIndex) + tail;
+
+                    if (UnicodeCalculator.GetWidth(charToDelete) == 2)
+                    {
+                        tail += "  ";
+                    }
+                    else if (UnicodeCalculator.GetWidth(charToDelete) == 1)
+                    {
+                        tail += " ";
+                    }
+
+                    console.Write(tail);
+                    console.Cursor.MoveLeft(tail.Length);
+                }
+
+                continue;
+            }
+
             if (key.Key == ConsoleKey.Backspace)
             {
-                if (text.Length > 0)
+                if (lineIndex > 0)
                 {
-                    var lastChar = text.Last();
-                    text = text.Substring(0, text.Length - 1);
-
-                    if (mask != null)
+                    char charToDelete = text[lineIndex - 1];
+                    string tail = string.Empty;
+                    if (lineIndex < text.Length)
                     {
-                        if (UnicodeCalculator.GetWidth(lastChar) == 1)
-                        {
-                            console.Write("\b \b");
-                        }
-                        else if (UnicodeCalculator.GetWidth(lastChar) == 2)
-                        {
-                            console.Write("\b \b\b \b");
-                        }
+                        tail = text.Substring(lineIndex);
                     }
+
+                    text = text.Substring(0, lineIndex - 1) + tail;
+
+                    if (UnicodeCalculator.GetWidth(charToDelete) == 2)
+                    {
+                        console.Cursor.MoveLeft();
+                        console.Cursor.MoveLeft();
+                        tail += "  ";
+                    }
+                    else if (UnicodeCalculator.GetWidth(charToDelete) == 1)
+                    {
+                        console.Cursor.MoveLeft();
+                        tail += " ";
+                    }
+
+                    console.Write(tail);
+                    console.Cursor.MoveLeft(tail.Length);
+                    lineIndex--;
                 }
 
                 continue;
@@ -101,6 +161,7 @@ public static class AnsiConsoleExtensions
                     text = string.Empty;
                 }
 
+                lineIndex = text.Length;
                 continue;
             }
 
@@ -123,15 +184,21 @@ public static class AnsiConsoleExtensions
                 }
 
                 console.Write(text);
+                lineIndex = text.Length;
 
                 continue;
             }
 
             if (!char.IsControl(key.KeyChar))
             {
-                text += key.KeyChar.ToString();
+                text = text.Insert(lineIndex, key.KeyChar.ToString());
+                lineIndex++;
+
+                // text += key.KeyChar.ToString();
                 var output = key.KeyChar.ToString();
                 console.Write(secret ? output.Mask(mask) : output, style);
+                console.Write(secret ? text.Substring(lineIndex).Mask(mask) : text.Substring(lineIndex), style);
+                AnsiConsole.Cursor.MoveLeft(text.Substring(lineIndex).Length);
             }
         }
     }
