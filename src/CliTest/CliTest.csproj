@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TextPromptWithHistory\TextPromptWithHistory.csproj" />
+    <ProjectReference Include="..\ShellExtension\ShellExtension.csproj" />
   </ItemGroup>
 
 </Project>

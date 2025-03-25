@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextPromptWithHistory.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CliTest", "CliTest\CliTest.csproj", "{0496E4E4-EE4F-4AEC-BA99-91CD5731D0B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShellExtension", "ShellExtension\ShellExtension.csproj", "{90189E6B-641F-41A2-A0CD-6C37D9FFEFBE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,11 +37,18 @@ Global
 		{0496E4E4-EE4F-4AEC-BA99-91CD5731D0B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0496E4E4-EE4F-4AEC-BA99-91CD5731D0B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0496E4E4-EE4F-4AEC-BA99-91CD5731D0B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90189E6B-641F-41A2-A0CD-6C37D9FFEFBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90189E6B-641F-41A2-A0CD-6C37D9FFEFBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90189E6B-641F-41A2-A0CD-6C37D9FFEFBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90189E6B-641F-41A2-A0CD-6C37D9FFEFBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F8A29E93-2132-4055-BC12-9ACF5ECCF741} = {FB40FDEE-FD46-437F-A42F-FD8E528529B4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97988B8F-7D07-4416-BFD5-C735976A0D08}
 	EndGlobalSection
 EndGlobal
