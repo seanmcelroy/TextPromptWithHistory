@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using CliTest.TinyStupidGame;
+using TinyStupidGame;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -10,10 +10,12 @@ namespace CliTest.Cmds;
 internal sealed class List : Command<List.Settings>
 {
     private readonly TheGame _game;
+    private readonly IScreen _output;
 
-    public List(TheGame inj)
+    public List(TheGame inj, IScreen scr)
     {
         _game = inj;
+        _output = scr;
     }
 
     public sealed class Settings : BaseSettings
@@ -28,21 +30,20 @@ internal sealed class List : Command<List.Settings>
     {
         if (settings.ItemType?.ToLower() == "planets")
         {
-            AnsiConsole.MarkupLineInterpolated($"{_game.ListPlanets(settings.TalkALot)}");
+            _output.WriteLine(_game.ListPlanets(settings.TalkALot));
         }
         else if (settings.ItemType?.ToLower() == "ships")
         {
-            AnsiConsole.MarkupLineInterpolated($"{_game.ListShips(settings.TalkALot)}");
+            _output.WriteLine(_game.ListShips(settings.TalkALot));
         }
         else if (string.IsNullOrEmpty(settings.ItemType))
         {
-            AnsiConsole.MarkupLineInterpolated($"What kind of things you are interessted in?");
+            _output.WriteLine("What kind of things you are interessted in?");
         }
         else
         {
-            AnsiConsole.MarkupLineInterpolated($"I don't know much about {settings.ItemType}.");
+            _output.WriteLine($"I don't know much about {settings.ItemType}.");
         }
-
         return 0;
     }
 }

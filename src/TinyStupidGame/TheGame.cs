@@ -1,7 +1,5 @@
-using Spectre.Console;
-
-namespace CliTest.TinyStupidGame;
-internal class TheGame
+namespace TinyStupidGame;
+public class TheGame
 {
     private readonly List<string> _planets = new() { "Earth", "Jupiter", "Mars", "Venus" };
     private readonly List<string> _planetDict = new() { "mostly harmless.", "a gassy giant with lot of moons.", " the red one.", "Aphrodite, Inanna, thank god its Frigg, ... " };
@@ -24,7 +22,7 @@ internal class TheGame
         // AnsiConsole.WriteLine($"TheGame constructed.");
     }
 
-    internal string ListPlanets(bool talkALot)
+    public string ListPlanets(bool talkALot)
     {
         string retVal = string.Empty;
         for (int i = 0; i < _planets.Count; i++)
@@ -41,7 +39,7 @@ internal class TheGame
         return retVal;
     }
 
-    internal string ListShips(bool talkALot)
+    public string ListShips(bool talkALot)
     {
         string retVal;
         if (talkALot)
@@ -80,7 +78,7 @@ internal class TheGame
         return retVal;
     }
 
-    internal string SelectShip(string itemName, bool talkALot)
+    public string SelectShip(string itemName, bool talkALot)
     {
         string retVal = string.Empty;
         if (_ships.Contains(itemName))
@@ -97,7 +95,7 @@ internal class TheGame
         return retVal;
     }
 
-    internal string SelectTarget(string itemName, bool talkALot)
+    public string SelectTarget(string itemName, bool talkALot)
     {
         string retVal = string.Empty;
         if (_planets.Contains(itemName))
@@ -114,7 +112,7 @@ internal class TheGame
         return retVal;
     }
 
-    internal string WhereAmI(bool talkALot)
+    public string WhereAmI(bool talkALot)
     {
         string retVal = "You are on " + _planets[_yourPositionIdx] + ".";
         if (talkALot)
@@ -141,7 +139,7 @@ internal class TheGame
         return retVal;
     }
 
-    internal string Travel(bool talkALot)
+    private string CheckForTravel(bool talkALot)
     {
         string retVal = " ";
         if (string.IsNullOrEmpty(_selectedTarget) ||
@@ -160,34 +158,54 @@ internal class TheGame
         {
             if (_planets[_yourPositionIdx] == _selectedTarget)
             {
-                retVal = talkALot ? "I think to stay at home and keep your live boring you better type 'exit' ..." : "That's ridiculous.";
+                retVal = talkALot ? "I think to stay where you are and keep your live boring you better type 'exit' ..." : "That's ridiculous.";
             }
-            else
-            {
-                _yourPositionIdx = _planets.FindIndex(x => x.Equals(_selectedTarget));
-                int shipIdx = _ships.FindIndex(x => x.Equals(_selectedShip));
-                _shipPositions[shipIdx] = _yourPositionIdx;
+        }
 
-                AnsiConsole.Status()
-                .Start(talkALot ? $"You enter orbit to board {_selectedShip}..." : $".", ctx =>
-                {
-                    // Simulate some work
-                    AnsiConsole.MarkupLine(talkALot ? $"Enter {_selectedShip}..." : $".");
-                    Thread.Sleep(1000);
+        return retVal;
+    }
 
-                    // Update the status and spinner
-                    ctx.Status(talkALot ? "Accelerating..." : $".");
-                    ctx.Spinner(Spinner.Known.Star);
-                    ctx.SpinnerStyle(Style.Parse("green"));
+    public async Task TravelAsync(bool talkALot, IProgress<string>? progress = null)
+    {
+        string retVal = CheckForTravel(talkALot);
+        if (string.IsNullOrWhiteSpace(retVal))
+        {
+            progress?.Report(talkALot ? "It seems your journey is able to start.\n" : ".");
+            await Task.Delay(1000);
+            progress?.Report(talkALot ? $"It's time to leave {_planets[_yourPositionIdx]}.\n" : ".");
+            _yourPositionIdx = _planets.FindIndex(x => x.Equals(_selectedTarget));
+            await Task.Delay(1000);
+            int shipIdx = _ships.FindIndex(x => x.Equals(_selectedShip));
+            progress?.Report(talkALot ? $"{_ships[shipIdx]} is ready and awaits your boarding.\n" : ".");
+            await Task.Delay(1000);
+            _shipPositions[shipIdx] = _yourPositionIdx;
+            progress?.Report(talkALot ? $"{_ships[shipIdx]} leaves for {_planets[_yourPositionIdx]} now.\n" : ".");
+            await Task.Delay(1000);
+            progress?.Report(talkALot ? $"Served food is acceptable.\n" : ".");
+            await Task.Delay(1000);
+            progress?.Report(talkALot ? $"View is somehow boring...\n" : ".");
+            await Task.Delay(1000);
+            progress?.Report(talkALot ? "After an exciting journey finally you reached your desired target." : "arrived.");
+        }
+        else
+        {
+            progress?.Report(retVal);
+            await Task.Delay(1000);
+        }
 
-                    // Simulate some work
-                    AnsiConsole.MarkupLine(talkALot ? $"Heading towards {_selectedTarget}..." : $".");
-                    Thread.Sleep(2000);
-                });
+        // return retVal;
+    }
 
-                _selectedTarget = null;
-                retVal = talkALot ? "After an exciting journey finally you reached your desired target." : "arrived.";
-            }
+    public string Travel(bool talkALot)
+    {
+        string retVal = CheckForTravel(talkALot);
+        if (string.IsNullOrWhiteSpace(retVal))
+        {
+            _yourPositionIdx = _planets.FindIndex(x => x.Equals(_selectedTarget));
+            int shipIdx = _ships.FindIndex(x => x.Equals(_selectedShip));
+            _shipPositions[shipIdx] = _yourPositionIdx;
+            _selectedTarget = null;
+            retVal = talkALot ? "After an exciting journey finally you reached your desired target." : "arrived.";
         }
 
         return retVal;

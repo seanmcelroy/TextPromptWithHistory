@@ -16,43 +16,54 @@ public static class Extensions
     /// <param name="exitCmd">the exit command to leave the shell.</param>
     public static void RunShell(this ICommandApp app, string prompt = ">", string exitCmd = "exit")
     {
-        List<string> history = new();
         while (true)
         {
             AnsiConsole.MarkupInterpolated($"{prompt}");
-            var line = ReadLine(history);
-            if (!string.IsNullOrEmpty(line))
+            var lineT = Console.In.ReadLineAsync(); // To support Async commands this does not block here!
+                                                    // The line editing is done by Console.In including a history list of typed lines!!!
+
+
+            if (lineT.IsCompletedSuccessfully)
             {
-                if (line.Trim().ToLower().StartsWith(exitCmd))
+                var line = lineT.Result;
+                if (!string.IsNullOrEmpty(line))
                 {
-                    break;
-                }
-
-                history.Add(line);
-                if (new List<string>() { "-?", "?", "help", "-help", "--help" }.Contains(line.Trim().ToLower()))
-                {
-                    line = "-h";
-                    AnsiConsole.MarkupLineInterpolated($"Type '{exitCmd}' to exit this shell.");
-                }
-
-                try
-                {
-                    string[] largs = line.Split(new char[] { }, StringSplitOptions.RemoveEmptyEntries);
-                    if (largs.Length == 2)
+                    if (line.Trim().ToLower().StartsWith(exitCmd))
                     {
-                        if (largs[0].Equals("help", StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            largs[0] = largs[1];
-                            largs[1] = "-h";
-                        }
+                        break;
                     }
 
-                    app.Run(largs);
+                    if (new List<string>() { "-?", "?", "help", "-help", "--help" }.Contains(line.Trim().ToLower()))
+                    {
+                        line = "-h";
+                        AnsiConsole.MarkupLineInterpolated($"Type '{exitCmd}' to exit this shell.");
+                    }
+
+                    try
+                    {
+                        string[] largs = line.Split(new char[] { }, StringSplitOptions.RemoveEmptyEntries);
+                        if (largs.Length == 2)
+                        {
+                            if (largs[0].Equals("help", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                largs[0] = largs[1];
+                                largs[1] = "-h";
+                            }
+                        }
+
+                        app.Run(largs);
+                    }
+                    catch (Exception cpe)
+                    {
+                        AnsiConsole.WriteException(cpe);
+                    }
                 }
-                catch (Exception cpe)
-                {
-                    AnsiConsole.WriteException(cpe);
-                }
+            }
+            else
+            {
+                // avoid heavy cpu load when polling for input line.
+                var t = Task.Delay(10);
+                t.Wait();
             }
         }
     }
@@ -150,8 +161,6 @@ public static class Extensions
 
                 continue;
             }
-
-
 
             if (key.Key == ConsoleKey.Delete)
             {

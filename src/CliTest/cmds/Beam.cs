@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using CliTest.TinyStupidGame;
+using TinyStupidGame;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -10,10 +10,11 @@ namespace CliTest.Cmds;
 internal sealed class Beam : Command<Beam.Settings>
 {
     private readonly TheGame _game;
-
-    public Beam(TheGame inj)
+    private readonly IScreen _output;
+    public Beam(TheGame inj, IScreen content)
     {
         _game = inj;
+        _output = content;
     }
 
     public sealed class Settings : BaseSettings
@@ -22,7 +23,14 @@ internal sealed class Beam : Command<Beam.Settings>
 
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
-        AnsiConsole.MarkupLineInterpolated($"{_game.Travel(settings.TalkALot)}");
+        IProgress<string> progress = new Progress<string>(ReportProgress);
+        _ = _game.TravelAsync(settings.TalkALot, progress);
         return 0;
+    }
+
+    private void ReportProgress(string message)
+    {
+        _output.WriteLine(message);
+        // AnsiConsole.MarkupLineInterpolated($"{message}");
     }
 }

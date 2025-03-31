@@ -1,6 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using CliTest.TinyStupidGame;
+using TinyStupidGame;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
@@ -10,10 +10,12 @@ namespace CliTest.Cmds;
 internal sealed class Select : Command<Select.Settings>
 {
     private readonly TheGame _game;
+    private readonly IScreen _output;
 
-    public Select(TheGame inj)
+    public Select(TheGame inj, IScreen output)
     {
         _game = inj;
+        _output = output;
     }
 
     public sealed class Settings : BaseSettings
@@ -31,19 +33,19 @@ internal sealed class Select : Command<Select.Settings>
     {
         if (settings.ItemType?.ToLower() == "planet")
         {
-            AnsiConsole.MarkupLineInterpolated($"{_game.SelectTarget(settings.ItemName ?? " ", settings.TalkALot)}");
+            _output.WriteLine($"{_game.SelectTarget(settings.ItemName ?? " ", settings.TalkALot)}");
         }
         else if (settings.ItemType?.ToLower() == "ship")
         {
-            AnsiConsole.MarkupLineInterpolated($"{_game.SelectShip(settings.ItemName ?? " ", settings.TalkALot)}");
+            _output.WriteLine($"{_game.SelectShip(settings.ItemName ?? " ", settings.TalkALot)}");
         }
         else if (string.IsNullOrEmpty(settings.ItemType))
         {
-            AnsiConsole.MarkupLineInterpolated($"What kind of things you want to select from?");
+            _output.WriteLine($"What kind of things you want to select from?");
         }
         else
         {
-            AnsiConsole.MarkupLineInterpolated($"I don't know any {settings.ItemType}.");
+            _output.WriteLine($"I don't know any {settings.ItemType}.");
         }
 
         return 0;

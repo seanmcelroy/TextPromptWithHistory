@@ -3,7 +3,10 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup Label="Dependencies">
+    <PackageVersion Include="ConsoleAppFramework" Version="5.4.1" />
+    <PackageVersion Include="Microsoft.Build.Framework" Version="17.13.9" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageVersion Include="Microsoft.VisualStudio.Web.CodeGeneration.Core" Version="9.0.0" />
     <PackageVersion Include="MinVer" PrivateAssets="All" Version="6.0.0" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" Version="8.0.0" />
     <PackageVersion Include="Wcwidth.Sources" Version="2.0.0" />
