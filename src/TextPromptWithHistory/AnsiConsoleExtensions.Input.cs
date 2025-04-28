@@ -23,7 +23,6 @@ public static class AnsiConsoleExtensions
 
         while (true)
         {
-            //Console.WriteLine($"\r\ncursorIndex: {cursorIndex}, buffer: {buffer}");
             cancellationToken.ThrowIfCancellationRequested();
             var rawKey = await console.Input.ReadKeyAsync(true, cancellationToken).ConfigureAwait(false);
             if (rawKey == null)
