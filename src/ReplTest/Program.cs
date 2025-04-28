@@ -15,6 +15,7 @@ internal static class Program
             if (!string.IsNullOrWhiteSpace(input))
             {
                 history.Add(input);
+                AnsiConsole.WriteLine($"Received: {input}");
             }
         }
     }
