@@ -1,10 +1,8 @@
-# `TextPromptWithHistory`
+# TextPromptWithHistory
 
 A .NET library that makes it easier to create even more useful `TextPrompt`s in `Spectre.Console` by adding shell history super powers to support REPL environments.
 
 ## Example
-
-<?# Example symbol="M:Prompt.Program.AddHistory" project="Prompt" /?>
 
 ```text
 Command (arrow up/down for history)> _

@@ -23,6 +23,7 @@ public static class AnsiConsoleExtensions
 
         while (true)
         {
+            //Console.WriteLine($"\r\ncursorIndex: {cursorIndex}, buffer: {buffer}");
             cancellationToken.ThrowIfCancellationRequested();
             var rawKey = await console.Input.ReadKeyAsync(true, cancellationToken).ConfigureAwait(false);
             if (rawKey == null)
@@ -115,7 +116,9 @@ public static class AnsiConsoleExtensions
             {
                 // Erase what is there
                 var bufferLength = buffer.Length;
-                console.Cursor.MoveLeft(bufferLength);
+
+                var amountToMoveCursorLeft = bufferLength == 0 ? 0 : cursorIndex;
+                console.Cursor.MoveLeft(amountToMoveCursorLeft);
                 console.Write(" ".Repeat(bufferLength));
                 console.Cursor.MoveLeft(bufferLength);
 
@@ -137,6 +140,10 @@ public static class AnsiConsoleExtensions
                     console.Write(buffer.ToString());
                     cursorIndex = buffer.Length;
                 }
+                else
+                {
+                    cursorIndex = 0;
+                }
 
                 continue;
             }
@@ -145,7 +152,9 @@ public static class AnsiConsoleExtensions
             {
                 // Erase what is there
                 var bufferLength = buffer.Length;
-                console.Cursor.MoveLeft(bufferLength);
+
+                var amountToMoveCursorLeft = bufferLength == 0 ? 0 : cursorIndex;
+                console.Cursor.MoveLeft(amountToMoveCursorLeft);
                 console.Write(" ".Repeat(bufferLength));
                 console.Cursor.MoveLeft(bufferLength);
 
